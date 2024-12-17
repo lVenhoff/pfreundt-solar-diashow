@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./assetViewStyle.css";
 import Asset from "../../classes/asset";
 import ImageAsset from "../../classes/imageAsset";
@@ -13,6 +13,7 @@ const AssetView: React.FC<AssetViewProps> = ({assets}) => {
 
   const [assetList, setAssetList] = useState<Asset[]>([]);
   const [displayElement, setDisplayElement] = useState<JSX.Element | null>(null);
+  const interval = useRef(null);
 
 
   useEffect(() => {
@@ -21,13 +22,14 @@ const AssetView: React.FC<AssetViewProps> = ({assets}) => {
   }, [assets]);
 
   useEffect(() => {
+    clearInterval(interval.current);
     startDiashow();
   },[assetList]);
 
   const startDiashow = () => {
 
     let counter: number = 0;
-    setInterval(() => {
+    interval.current = setInterval(() => {
       if (assetList[counter] instanceof ImageAsset) {
         const current: ImageAsset = assetList[counter] as ImageAsset;
         setDisplayElement(renderDisplay(false, `data:image/png;base64,${current.data}`));
