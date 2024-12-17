@@ -35,6 +35,7 @@ function createWindow() {
       preload: path.join(__dirname, "preload.mjs"),
       nodeIntegration: true,
       contextIsolation: false,
+      webviewTag: true,
     },
   });
 

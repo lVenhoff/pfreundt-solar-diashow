@@ -16,7 +16,8 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      webviewTag: true
     }
   });
   win.setFullScreen(true);

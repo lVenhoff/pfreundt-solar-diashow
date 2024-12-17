@@ -2,16 +2,13 @@ import Asset from "./asset";
 
 class WebAsset extends Asset {
 
-  private _path: string;
+  protected path: string;
 
-  constructor(path) {
+  constructor(path: string) {
         super();
-        this._path = path;
+        this.path = path;
   }
 
-  public get path() {
-    return this._path;
-  }
 }
 
 export default WebAsset;

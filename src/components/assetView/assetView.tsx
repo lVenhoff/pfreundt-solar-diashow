@@ -12,8 +12,9 @@ type AssetViewProps = {
 const AssetView: React.FC<AssetViewProps> = ({assets}) => {
 
   const [assetList, setAssetList] = useState<Asset[]>([]);
-  const [imageSource, setImageSource] = useState<string | null>("https://picsum.photos/3440/1440");
-
+  const [assetSource, setAssetSource] = useState<string | null>("https://picsum.photos/3440/1440");
+  const [showWeb, setShowWeb] = useState<boolean>(false);
+  const [displayElement, setDisplayElement] = useState<JSX.Element | null>(null);
 
 
   useEffect(() => {
@@ -30,23 +31,44 @@ const AssetView: React.FC<AssetViewProps> = ({assets}) => {
     let counter: number = 0;
     setInterval(() => {
 
-      const current: ImageAsset = assetList[counter] as ImageAsset;
+      //window.alert(assetList[counter].assetPath);
 
-      setImageSource(`data:image/png;base64,${current.data}`);
-      console.log(`Current Image: ${current.data}`);
+      if (assetList[counter] instanceof ImageAsset) {
+        setShowWeb(false);
+        const current: ImageAsset = assetList[counter] as ImageAsset;
+        //setAssetSource(`data:image/png;base64,${current.data}`);
+        setDisplayElement(renderDisplay(false, `data:image/png;base64,${current.data}`));
+      }
+      else {
+        setShowWeb(true);
+        //Show web here!
+        setAssetSource(assetList[counter].assetPath);
+        setDisplayElement(renderDisplay(true, assetList[counter].assetPath));
+        //clearInterval(testinterval);
+      }
+
       counter++;
 
       if (counter >= assetList.length) {
         counter = 0;
       }
 
-    }, 1000);
+    },5000);
+  }
+
+  const renderDisplay = (showWeb: boolean, source: string):JSX.Element => {
+    if (showWeb) {
+      return <webview className="asset-view--web" src={source} style={{ width: "100vw", height: "100vh", border: "none" }}></webview>;
+    }
+    else {
+      return <img className="asset-view--image" src={source}></img>
+    }
   }
 
 
   return (
     <div className="asset-view">
-      {imageSource !== null ? <img className="asset-view--image" src={imageSource}></img> : <></>}
+      {assetSource !== null ? displayElement : <></>}
     </div>
   );
 }

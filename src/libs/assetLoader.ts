@@ -9,14 +9,19 @@ class AssetLoader {
     const files: string[] = await fs.readdir("/opt/diashow");
 
     const assets: Promise<Asset>[] = files.map(async (element: string) => {
-      const file: Buffer = await fs.readFile(`/opt/diashow/${element}`);
 
-      if (element.endsWith(".txt")) {
-        return new WebAsset(file.toString("utf-8"));
-      }
-      else {
+      try {
+        const file: Buffer = await fs.readFile(`/opt/diashow/${element}`);
+
+        if (element.endsWith(".txt")) {
+          return new WebAsset(file.toString("utf-8"));
+        }
+        else {
           console.log(file.toString("base64"));
           return new ImageAsset(element, file.toString("base64"));
+        }
+      } catch {
+        console.error("There was a problem while loading an asset!");
       }
     });
 
